@@ -9,7 +9,11 @@ Namespace Base
 
 
         Private _restoOrderMenuDetailRepository As IRestoOrderMenuDetailRepository
+
+        Private _restomenus As IRestoMenus
+
         Private _repositoryContext As IRepositoryContext
+
 
         Public Sub New(repositoryContext As IRepositoryContext)
             _repositoryContext = repositoryContext
@@ -22,6 +26,16 @@ Namespace Base
                 End If
                 Return _restoOrderMenuDetailRepository
 
+            End Get
+        End Property
+
+        Public ReadOnly Property RestoMenus As IRestoMenus Implements IRepositoryManager.RestoMenus
+            Get
+                If _restomenus Is Nothing Then
+                    _restomenus = New RestoMenus(_repositoryContext)
+                End If
+
+                Return _restomenus
             End Get
         End Property
     End Class
