@@ -1,8 +1,8 @@
 ﻿Imports RealtaVbNetApi.Model
 
 Namespace Repository
-    Public Interface IRestoOrderMenuDetailRepository
-        Function CreateRestoOrderDetail(ByVal restoOrderMenu As RestoOrderMenuDetail) As RestoOrderMenuDetail
+    Public Interface IRestoMenus
+        Function CreateRestoOrderDetail(ByVal region As RestoOrderMenuDetail) As RestoOrderMenuDetail
 
         Function DeleteRestoOrderDetail(ByVal id As Int32) As Int32
 
@@ -17,4 +17,3 @@ Namespace Repository
         Function UpdateRestoOrderDetailBySp(id As Integer, value As String, Optional showCommand As Boolean = False) As Boolean
     End Interface
 End Namespace
-

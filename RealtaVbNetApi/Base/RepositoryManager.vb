@@ -6,6 +6,8 @@ Namespace Base
     Public Class RepositoryManager
 
         Implements IRepositoryManager
+
+
         Private _restoOrderMenuDetailRepository As IRestoOrderMenuDetailRepository
         Private _repositoryContext As IRepositoryContext
 

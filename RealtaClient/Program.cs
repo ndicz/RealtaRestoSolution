@@ -31,7 +31,7 @@ namespace RealtaClient // Note: actual namespace depends on the project name.
             Console.Write("Masukan ID : ");
             var inputID = Convert.ToInt32(Console.ReadLine());
             var ordermenubyid = _realtaVbApi.RepositoryManager.RestoOrderMenuDetail.FindRestoOrderDetailById(inputID);
-            Console.WriteLine($"Found region : {ordermenubyid}");
+            Console.WriteLine($"Found Menu : {ordermenubyid}");
 
             //CREATE
 
