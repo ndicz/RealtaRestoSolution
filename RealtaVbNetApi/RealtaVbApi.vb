@@ -30,7 +30,9 @@ Public Class RealtaVbApi
         End Get
     End Property
 
-
+    Public Sub SayHello() Implements IRealtaVbApi.SayHello
+        Console.WriteLine("HALO")
+    End Sub
 
 
 End Class
