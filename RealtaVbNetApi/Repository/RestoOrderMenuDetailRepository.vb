@@ -1,5 +1,6 @@
 ﻿Imports System.Data
 Imports System.Data.SqlClient
+Imports System.Runtime.InteropServices
 Imports RealtaVbNetApi.Context
 Imports RealtaVbNetApi.Model
 
@@ -56,7 +57,28 @@ Namespace Repository
         End Function
 
         Public Function DeleteRestoOrderDetail(id As Integer) As Integer Implements IRestoOrderMenuDetailRepository.DeleteRestoOrderDetail
-            Throw New NotImplementedException()
+
+            Dim rowEffect As Int32 = 0
+            Dim stmt As String = "delete from Resto.order_menu_detail where omde_id = @omde_id"
+            Using conn As New SqlConnection With {.ConnectionString = _context.GetConnectionString}
+
+                Using cmd As New SqlCommand With {.Connection = conn, .CommandText = stmt}
+                    cmd.Parameters.AddWithValue("@omde_id", id)
+
+
+                    Try
+                        conn.Open()
+                        rowEffect = cmd.ExecuteNonQuery()
+
+                        conn.Close()
+                    Catch ex As Exception
+                        Console.WriteLine(ex.Message)
+                    End Try
+
+                End Using
+            End Using
+            Return rowEffect
+
         End Function
 
         Public Function FindAllRestoOrderDetail() As List(Of RestoOrderMenuDetail) Implements IRestoOrderMenuDetailRepository.FindAllRestoOrderDetail
@@ -96,8 +118,42 @@ Namespace Repository
             Return restoOrderDetailList
         End Function
 
-        Public Function FindAllRestoOrderDetailAsync() As Task(Of List(Of RestoOrderMenuDetail)) Implements IRestoOrderMenuDetailRepository.FindAllRestoOrderDetailAsync
+        Public Async Function FindAllRestoOrderDetailAsync() As Task(Of List(Of RestoOrderMenuDetail)) Implements IRestoOrderMenuDetailRepository.FindAllRestoOrderDetailAsync
 
+            Dim restoOrderDetailList As New List(Of RestoOrderMenuDetail)
+
+            Dim sql As String = "SELECT omde_id,orme_price,orme_qty,orme_subtotal,orme_discount,omde_orme_id,omde_reme_id from Resto.order_menu_detail " &
+                                "Order by omde_id desc;"
+
+            Using conn As New SqlConnection With {.ConnectionString = _context.GetConnectionString}
+
+                Using cmd As New SqlCommand With {.Connection = conn, .CommandText = sql}
+
+                    Try
+                        conn.Open()
+                        Dim reader = Await cmd.ExecuteReaderAsync()
+
+                        While reader.Read()
+                            restoOrderDetailList.Add(New RestoOrderMenuDetail() With {
+                            .OmdeId = If(reader.IsDBNull(0), "", reader.GetInt32(0)),
+                            .OrmePrice = If(reader.IsDBNull(1), 0, reader.GetDecimal(1)),
+                            .OrmeQyt = If(reader.IsDBNull(2), 0, reader.GetInt16(2)),
+                            .OrmeSubtotal = If(reader.IsDBNull(3), 0, reader.GetDecimal(3)),
+                            .OrmeDiscount = If(reader.IsDBNull(4), 0, reader.GetDecimal(4)),
+                            .OmdeOrmeId = If(reader.IsDBNull(5), 0, reader.GetInt32(5)),
+                            .OmdeRemeId = If(reader.IsDBNull(6), 0, reader.GetInt32(6))
+                            })
+                        End While
+
+                        reader.Close()
+                        conn.Close()
+
+                    Catch ex As Exception
+                        Console.WriteLine(ex.Message)
+                    End Try
+                End Using
+            End Using
+            Return restoOrderDetailList
 
         End Function
 
@@ -137,8 +193,45 @@ Namespace Repository
             End Using
             Return restoOrderDetail
         End Function
-        Public Function UpdateRestoOrderDetailById(id As Integer, value As String, Optional showCommand As Boolean = False) As Boolean Implements IRestoOrderMenuDetailRepository.UpdateRestoOrderDetailById
-            Throw New NotImplementedException()
+        Public Function UpdateRestoOrderDetailById(omdeId As Integer, ormePrice As Decimal, ormeQyt As Integer,
+                                                   ormeSubtotal As Integer, ormeDiscount As Decimal, omdeOrmeId As Integer,
+                                                   omdeRemeId As Integer, Optional showCommand As Boolean = False) As Boolean Implements IRestoOrderMenuDetailRepository.UpdateRestoOrderDetailById
+            Dim updateOdet As RestoOrderMenuDetail
+            Dim stmt As String = "Update Resto.order_menu_detail " &
+                                 "set " &
+                                  "orme_price = @orme_price,
+                                  orme_qty = @orme_qty,
+                                  orme_subtotal = @orme_subtotal,
+                                  orme_discount = @orme_discount,
+                                  omde_orme_id = @omde_orme_id,
+                                  omde_reme_id = @omde_reme_id " &
+                                  "where omde_id = @omde_id"
+            Using conn As New SqlConnection With {.ConnectionString = _context.GetConnectionString}
+                Using cmd As New SqlCommand With {.Connection = conn, .CommandText = stmt}
+                    cmd.Parameters.AddWithValue("@omde_id", omdeId)
+                    cmd.Parameters.AddWithValue("@orme_price", ormePrice)
+                    cmd.Parameters.AddWithValue("@orme_qty", ormeQyt)
+                    cmd.Parameters.AddWithValue("@orme_subtotal", ormeSubtotal)
+                    cmd.Parameters.AddWithValue("@orme_discount", ormeDiscount)
+                    cmd.Parameters.AddWithValue("@omde_orme_id", omdeOrmeId)
+                    cmd.Parameters.AddWithValue("@omde_reme_id", omdeRemeId)
+
+                    If showCommand Then
+                        Console.WriteLine(cmd.CommandText)
+                    End If
+
+                    Try
+                        conn.Open()
+                        cmd.ExecuteNonQuery()
+
+                        conn.Close()
+                    Catch ex As Exception
+                        Console.WriteLine(ex.Message)
+                    End Try
+
+                End Using
+            End Using
+            Return True
         End Function
 
         Public Function UpdateRestoOrderDetailBySp(id As Integer, value As String, Optional showCommand As Boolean = False) As Boolean Implements IRestoOrderMenuDetailRepository.UpdateRestoOrderDetailBySp

@@ -5,8 +5,9 @@ Namespace Base
 
         ReadOnly Property RestoOrderMenuDetail As IRestoOrderMenuDetailRepository
 
-        ReadOnly Property RestoMenus As IRestoMenus
+        ReadOnly Property RestoMenus As IRestoMenusRepository
 
+        'ReadOnly Property RestoOrderMenus As IRestoOrderMenusRepository
 
     End Interface
 

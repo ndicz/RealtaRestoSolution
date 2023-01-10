@@ -10,7 +10,7 @@ Namespace Base
 
         Private _restoOrderMenuDetailRepository As IRestoOrderMenuDetailRepository
 
-        Private _restomenus As IRestoMenus
+        Private _restomenus As IRestoMenusRepository
 
         Private _repositoryContext As IRepositoryContext
 
@@ -29,15 +29,21 @@ Namespace Base
             End Get
         End Property
 
-        Public ReadOnly Property RestoMenus As IRestoMenus Implements IRepositoryManager.RestoMenus
+        Public ReadOnly Property RestoMenus As IRestoMenusRepository Implements IRepositoryManager.RestoMenus
             Get
                 If _restomenus Is Nothing Then
-                    _restomenus = New RestoMenus(_repositoryContext)
+                    _restomenus = New RestoMenusRepository(_repositoryContext)
                 End If
 
                 Return _restomenus
             End Get
         End Property
+
+        'Public ReadOnly Property RestoOrderMenus As IRestoOrderMenusRepository Implements IRepositoryManager.RestoOrderMenus
+        '    Get
+        '        Throw New NotImplementedException()
+        '    End Get
+        'End Property
     End Class
 End Namespace
 
