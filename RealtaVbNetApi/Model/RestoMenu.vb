@@ -1,6 +1,6 @@
 ﻿Namespace Model
 
-    Public Class RestoMenus
+    Public Class RestoMenu
 
         Private _remeFaciId As Integer
         Private _remeId As Integer

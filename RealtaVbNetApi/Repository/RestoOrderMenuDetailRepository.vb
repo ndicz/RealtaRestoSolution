@@ -196,9 +196,10 @@ Namespace Repository
         Public Function UpdateRestoOrderDetailById(omdeId As Integer, ormePrice As Decimal, ormeQyt As Integer,
                                                    ormeSubtotal As Integer, ormeDiscount As Decimal, omdeOrmeId As Integer,
                                                    omdeRemeId As Integer, Optional showCommand As Boolean = False) As Boolean Implements IRestoOrderMenuDetailRepository.UpdateRestoOrderDetailById
-            Dim updateOdet As RestoOrderMenuDetail
+            Dim restoOrderD As New RestoOrderMenuDetail With {.OmdeId = omdeId}
+
             Dim stmt As String = "Update Resto.order_menu_detail " &
-                                 "set " &
+                                 "set " &   
                                   "orme_price = @orme_price,
                                   orme_qty = @orme_qty,
                                   orme_subtotal = @orme_subtotal,
